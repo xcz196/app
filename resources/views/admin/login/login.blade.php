@@ -15,6 +15,53 @@
         .popupAlert .backBtn{ float: right; margin: 10px 20px 0 0; display: block; width: 100px; height: 40px; background: #17c2a4; border-radius: 6px; text-align: center; line-height: 40px; text-decoration: none; font-size: 16px; color: #FFF}
 
     </style>
+    <style id="tsbrowser_video_independent_player_style" type="text/css">
+      [tsbrowser_force_max_size] {
+        width: 100% !important;
+        height: 100% !important;
+        left: 0px !important;
+        top: 0px !important;
+        margin: 0px !important;
+        padding: 0px !important;
+        transform: none !important;
+      }
+      [tsbrowser_force_fixed] {
+        position: fixed !important;
+        z-index: 9999 !important;
+        background: black !important;
+      }
+      [tsbrowser_force_hidden] {
+        opacity: 0 !important;
+        z-index: 0 !important;
+      }
+      [tsbrowser_hide_scrollbar] {
+        overflow: hidden !important;
+      }
+      [tsbrowser_display_none] {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+      }
+      [tsbrowser_force_show] {
+        display: black !important;
+        visibility: visible !important;
+        opacity: 0;
+      }
+        #dl{
+
+          background-color: #703EFF;
+          width: 120px;
+            height: 44px;
+          border-radius: 50px;
+          border-bottom: none;
+          cursor: pointer;
+          font-size: 16px;
+          color: #fff;
+          text-align: center;
+          font-weight: bold;
+
+        }
+    </style>
 </head>
     <body><div id="BAIDU_DUP_fp_wrapper" style="position: absolute; left: -1px; bottom: -1px; z-index: 0; width: 0px; height: 0px; overflow: hidden; visibility: hidden; display: none;">
         <iframe id="BAIDU_DUP_fp_iframe" src="" style="width: 0px; height: 0px; visibility: hidden; display: none;"></iframe></div>
@@ -114,60 +161,60 @@
 
 </body></html>
 <script>
-$(function () {
-    $('.saoma').click(function () {
-        huanha();
-    })
-    $('#erweima').click(function () {
-        huanha();
-    })
-    $('#dl').click(function () {
-        var user_name=$('[name="user_name"]').val();
-        var user_pwd=$('[name="user_pwd"]').val();
-        if (user_name=='' || user_pwd==''){
-            alert('用户名密码必填！');
-            return ;
-        }
-        $.ajax({
-            method: "POST",
-            url: "{{url('login/login_do')}}",
-            data: { user_name:user_name, user_pwd:user_pwd },
-            dataType:'json'
-        }).done(function( msg ) {
-            alert(msg.msg)
-            if (msg.code==200){
-                location.href='{{url('index/index')}}';
+    $(function () {
+        $('.saoma').click(function () {
+            huanha();
+        })
+        $('#erweima').click(function () {
+            huanha();
+        })
+        $('#dl').click(function () {
+            var user_name=$('[name="user_name"]').val();
+            var user_pwd=$('[name="user_pwd"]').val();
+            if (user_name=='' || user_pwd==''){
+                alert('用户名密码必填！');
+                return ;
             }
-        });
+            $.ajax({
+                method: "POST",
+                url: "{{url('login/login_do')}}",
+                data: { user_name:user_name, user_pwd:user_pwd },
+                dataType:'json'
+            }).done(function( msg ) {
+                alert(msg.msg)
+                if (msg.code==200){
+                    location.href='{{url('index/index')}}';
+                }
+            });
 
+        })
     })
-})
-function huanha() {
-    $.ajax({
-        method: "get",
-        url: "{{url('login/logincode')}}",
-        dataType:'json'
-    }).done(function( msg ) {
-        $('#erweima').attr('src',msg.data.img_url);
-        setTimer(msg.data.key);
-    });
-}
-function setTimer (logo) {
-    console.log(logo);
-    var t=setInterval(function (){is_scan(logo)}, 1000);
-    function is_scan(logo) {
+    function huanha() {
         $.ajax({
             method: "get",
-            url: "{{url('login/is_scan')}}",
-            dataType:'json',
-            data:{logo:logo}
-        }).done(function(msg) {
-            if (msg.code==200) {
-                clearInterval(t);
-                location.href="{{url('login/login_do')}}"+'?logo='+logo;
-            }
+            url: "{{url('login/logincode')}}",
+            dataType:'json'
+        }).done(function( msg ) {
+            $('#erweima').attr('src',msg.data.img_url);
+            setTimer(msg.data.key);
         });
     }
-}
+    function setTimer (logo) {
+        console.log(logo);
+        var t=setInterval(function (){is_scan(logo)}, 1000);
+        function is_scan(logo) {
+            $.ajax({
+                method: "get",
+                url: "{{url('login/is_scan')}}",
+                dataType:'json',
+                data:{logo:logo}
+            }).done(function(msg) {
+                if (msg.code==200) {
+                    clearInterval(t);
+                    location.href="{{url('login/login_do')}}"+'?logo='+logo;
+                }
+            });
+        }
+    }
 
 </script>
