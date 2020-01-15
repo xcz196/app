@@ -14,7 +14,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\UserModel;
 use Session;
-
+use App\Tools\Wechat;
 
 class LoginController extends Controller
 {
@@ -58,14 +58,32 @@ class LoginController extends Controller
         # 同一账号不同地点登录互踢
         $session_id = Session::getId();
         if ($session_id!=$info['session_id'] && $info['expire_time']>time()){
+            $request->session()->forget($info['session_id']);
             $json= 'A long-distance login';
         }else{
             $json='login successfully';
         }
         $expire_time=time()+1200;
         UserModel::where('user_id',$info['user_id'])->update(['expire_time'=>$expire_time,'session_id'=>$session_id]);
-        $request->session()->forget($session_id);
+
         echo json_encode(['code'=>200,'msg'=>$json]);
         exit;
+    }
+
+    public function logcode(){
+        $status=md5(uniqid().rand(1000000,9999999));
+        $img_url=Wechat::loginCode($status);
+        echo json_encode(['code'=>200,'msg'=>'ok','data'=>['img_url'=>$img_url,'key'=>$status]]);exit;
+    }
+
+    //查看是否已扫描
+    public function is_scan(Request $request){
+        $logo=$request->logo;
+        $openid=cache((string)$logo);
+        if (!$openid){
+            echo json_encode(['code'=>300005,'msg'=>'Not scan']);
+            exit;
+        }
+        echo json_encode(['code'=>200,'msg'=>'ok']);exit;
     }
 }

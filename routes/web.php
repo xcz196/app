@@ -22,6 +22,7 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::any('home/link',"Home\LinkController@index");
 
 //登录
 Route::prefix('login')->namespace('Admin')->group(function () {
@@ -30,6 +31,8 @@ Route::prefix('login')->namespace('Admin')->group(function () {
     });
 //    loginVerify
     Route::post('login_do',"LoginController@login_do");
+    Route::get('logincode',"LoginController@logcode");
+    Route::get('is_scan',"LoginController@is_scan");
 });
 
 // index
@@ -37,4 +40,8 @@ Route::prefix('index')->middleware('loginVerify')->namespace('Admin')->group(fun
     Route::get('index', function () {
         return view('admin.index.index');
     });
+    Route::get('asa',"LoginController@asa");
+});
+Route::get('cs/aaa',function (){
+    return view('aaa');
 });

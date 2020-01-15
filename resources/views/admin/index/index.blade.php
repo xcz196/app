@@ -9,7 +9,7 @@
     <title>Document</title>
 </head>
 <body>
-    <button type="button" id="dj1">点击</button>
+    <button type="button" id="dj">点击</button>
 </body>
 </html>
 <script>
